@@ -9,12 +9,12 @@ class ApiHandler {
   // /companies/:companyId/locations - Returns all locations of the company
   // /companies/:companyId/assets - Returns all assets of the company
 
-  final url = "fake-api.tractian.com";
+  final _url = "http://fake-api.tractian.com";
 
   Future<List<CompaniesModel>> getCompanies() async {
     List<CompaniesModel> list;
     try {
-      final response = await http.get(Uri.parse("$url/comapanies"));
+      final response = await http.get(Uri.parse("$_url/companies"));
       
       list = (jsonDecode(response.body) as List).map((e) => CompaniesModel.fromMap(e),).toList(); 
     } catch (e) {
@@ -27,7 +27,7 @@ class ApiHandler {
   Future<List<LocationModel>> getLocationCompany(CompaniesModel companies) async {
     List<LocationModel> list;
     try {
-      final response = await http.get(Uri.parse("$url/comapnies/${companies.id}"));
+      final response = await http.get(Uri.parse("$_url/comapnies/${companies.id}"));
       list = (jsonDecode(response.body) as List).map((e) => LocationModel.fromMap(e),).toList();
     } catch (e) {
       print(e);
