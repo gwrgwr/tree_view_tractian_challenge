@@ -10,7 +10,6 @@ import 'package:tree_view_tractian_challenge/services/api_handler.dart';
 class TreeViewWidget extends StatefulWidget {
   const TreeViewWidget({super.key});
 
-
   @override
   State<TreeViewWidget> createState() => _TreeViewWidgetState();
 }
@@ -28,7 +27,8 @@ class _TreeViewWidgetState extends State<TreeViewWidget> {
 
   Future<void> _fetchCompanies() async {
     // Substitua pela URL correta da sua API
-    final response = await http.get(Uri.parse('http://fake-api.tractian.com/companies'));
+    final response =
+        await http.get(Uri.parse('http://fake-api.tractian.com/companies'));
 
     if (response.statusCode == 200) {
       List<dynamic> companies = json.decode(response.body);
@@ -43,18 +43,21 @@ class _TreeViewWidgetState extends State<TreeViewWidget> {
   }
 
   Future<void> _fetchLocationsAndAssets(String companyId) async {
-    final locationsResponse = await http.get(Uri.parse('http://fake-api.tractian.com/companies/$companyId/locations'));
-    final assetsResponse = await http.get(Uri.parse('http://fake-api.tractian.com/companies/$companyId/assets'));
+    final locationsResponse = await http.get(Uri.parse(
+        'http://fake-api.tractian.com/companies/$companyId/locations'));
+    final assetsResponse = await http.get(
+        Uri.parse('http://fake-api.tractian.com/companies/$companyId/assets'));
 
-    if (locationsResponse.statusCode == 200 && assetsResponse.statusCode == 200) {
+    if (locationsResponse.statusCode == 200 &&
+        assetsResponse.statusCode == 200) {
       setState(() {
-        print(json.decode(locationsResponse.body));
         locations = (json.decode(locationsResponse.body) as List)
             .map((data) => LocationModel.fromJson(data))
             .toList();
         assets = (json.decode(assetsResponse.body) as List)
             .map((data) => AssetsModel.fromJson(data))
             .toList();
+        print(locations);
       });
     } else {
       throw Exception('Falha ao carregar as localizações e ativos');
@@ -62,7 +65,9 @@ class _TreeViewWidgetState extends State<TreeViewWidget> {
   }
 
   List<Widget> _buildTree(
-      List<LocationModel> locations, List<AssetsModel> assets) {
+    List<LocationModel> locations,
+    List<AssetsModel> assets,
+  ) {
     Map<String, List<Widget>> locationToAssets = {};
 
     for (var asset in assets) {
@@ -80,6 +85,7 @@ class _TreeViewWidgetState extends State<TreeViewWidget> {
     }
 
     return locations.where((loc) => loc.parentId == null).map((location) {
+      print(locationToAssets[location.id]);
       return ExpansionTile(
         title: Text(location.name),
         children: locationToAssets[location.id] ?? [],
@@ -88,10 +94,18 @@ class _TreeViewWidgetState extends State<TreeViewWidget> {
   }
 
   Widget _buildAssetNode(AssetsModel asset) {
-    if (asset.sensorType != null) {
-      return ListTile(
-        title: Text('${asset.name} [Component - ${asset.sensorType}]'),
-      );
+        final son = assets.where((element) => element.parentId == asset.id,).toList();
+
+    if (asset.parentId == null) {
+      return ExpansionTile(title: Text(asset.name), children: [
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: son.length,
+          itemBuilder: (context, index) {
+            final item = son[index];
+          return Text(item.name);
+        },)
+      ],);
     } else {
       return ExpansionTile(
         title: Text(asset.name),
@@ -104,10 +118,10 @@ class _TreeViewWidgetState extends State<TreeViewWidget> {
   Widget build(BuildContext context) {
     return locations.isNotEmpty && assets.isNotEmpty
         ? Expanded(
-          child: ListView(
+            child: ListView(
               children: _buildTree(locations, assets),
             ),
-        )
+          )
         : Center(child: CircularProgressIndicator());
   }
 }
