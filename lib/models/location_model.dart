@@ -41,7 +41,13 @@ class LocationModel {
 
   String toJson() => json.encode(toMap());
 
-  factory LocationModel.fromJson(String source) => LocationModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory LocationModel.fromJson(Map<String, dynamic> json) {
+    return LocationModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      parentId: json['parentId'] as String?,
+    );
+  }
 
   @override
   String toString() => 'LocationModel(id: $id, name: $name, parentId: $parentId)';

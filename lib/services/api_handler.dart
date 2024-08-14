@@ -15,8 +15,12 @@ class ApiHandler {
     List<CompaniesModel> list;
     try {
       final response = await http.get(Uri.parse("$_url/companies"));
-      
-      list = (jsonDecode(response.body) as List).map((e) => CompaniesModel.fromMap(e),).toList(); 
+
+      list = (jsonDecode(response.body) as List)
+          .map(
+            (e) => CompaniesModel.fromMap(e),
+          )
+          .toList();
     } catch (e) {
       print(e);
       list = [];
@@ -24,11 +28,17 @@ class ApiHandler {
     return list;
   }
 
-  Future<List<LocationModel>> getLocationCompany(CompaniesModel companies) async {
+  Future<List<LocationModel>> getLocationCompany(
+      CompaniesModel companies) async {
     List<LocationModel> list;
     try {
-      final response = await http.get(Uri.parse("$_url/comapnies/${companies.id}"));
-      list = (jsonDecode(response.body) as List).map((e) => LocationModel.fromMap(e),).toList();
+      final response =
+          await http.get(Uri.parse("$_url/companies/${companies.id}/locations"));
+      list = (jsonDecode(response.body) as List)
+          .map(
+            (e) => LocationModel.fromMap(e),
+          )
+          .toList();
     } catch (e) {
       print(e);
       list = [];

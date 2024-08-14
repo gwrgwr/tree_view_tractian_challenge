@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tree_view_tractian_challenge/pages/assets_page.dart';
 import 'package:tree_view_tractian_challenge/pages/home_page.dart';
 
 void main() {

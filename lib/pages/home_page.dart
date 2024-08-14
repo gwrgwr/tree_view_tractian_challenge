@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tree_view_tractian_challenge/pages/assets_page.dart';
 import 'package:tree_view_tractian_challenge/repository/companies/companie_repository.dart';
 import 'package:tree_view_tractian_challenge/repository/companies/companie_state.dart';
 import 'package:tree_view_tractian_challenge/responsive/text_scale.dart';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0xff17192D),
+        backgroundColor: const Color(0xff17192D),
         actions: [
           Expanded(
             child: IconButton(
@@ -62,7 +63,15 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       final item = state.list[index];
                       return GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return AssetsPage(companiesModel: item,);
+                              },
+                            ),
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.blue,
